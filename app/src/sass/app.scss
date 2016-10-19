@@ -1,3 +1,9 @@
 @import "vendor/mixin";
 @import "vendor/reset";
 @import "vendor/bootstrap";
+
+body {
+  span {
+    @include tooltip(attr(data-tooltip), 'top');
+  }
+}

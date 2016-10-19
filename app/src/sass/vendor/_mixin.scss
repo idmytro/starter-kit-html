@@ -139,50 +139,68 @@ $breakpoints: (
   }
 }
 
-@mixin tooltip($content: attr(data-tooltip), $direction: top) {
+@mixin text-shadow($ts...) {
+  text-shadow: $ts;
+}
+
+@mixin tooltip($content: attr(data-tooltip), $direction: top, $width: auto) {
   position: relative;
-  &:before, &:after {
-    display: none;
+  &:before {
+    //@include transform(translateX(-50%));
+    @include transition(300ms all);
+    @include opacity(0);
+    content: '';
+    display: block;
+    position: absolute;
+    width: $width;
     z-index: 98;
+    //left: 50%;
+    left: 0;
+    right: 0;
+    margin:auto;
+    @if ($direction == 'top') {
+      @include triangle(down, 6px, #222);
+      top: -6px;
+      margin-top: 0;
+
+    } @else if ($direction == 'bottom') {
+      @include triangle(up, 6px, #222);
+      top: auto;
+      margin-top: 0;
+      bottom: -6px;
+    }
+  }
+  &:after {
+    @include text-shadow(1px 1px #000);
+    @include transition(300ms all);
+    @include opacity(0);
+    content: $content;
+    display: block;
+    width: $width;
+    position: absolute;
+    padding: 6px;
+    font-size: 12px;
+    text-align: center;
+    white-space: nowrap;
+    color: #fff;
+    background-color: #222;
+    line-height: 12px;
+    height: 12px + 2*6px;
+    z-index: 98;
+    @if ($direction == 'top') {
+      top: -24px - 6px;
+      left: 0;
+    } @else if ($direction == 'bottom') {
+      bottom: -24px - 6px;
+      left: 0
+    }
   }
   &:hover {
-    &:after { // for text bubble
-      content: $content;
-      display: block;
-      position: absolute;
-      height: 12px; // (makes total height including padding 22px)
-      padding: 6px;
-      font-size: 12px;
-      white-space: nowrap;
-      color: #fff;
-      @include text-shadow(1px 1px #000);
-      background-color: #222;
+    &:after {
+      @include opacity(1);
     }
-    @if ($direction == 'top') {
-      &:before {
-        @include triangle(down, 6px, #222);
-        top: -6px;
-        margin-top: 0;
-        left: 47%;
-      }
-      &:after {
-        top: -28px;
-        left: 47%;
-        margin-left: -20px;
-      }
-    } @else if ($direction == 'bottom') {
-      &:before {
-        @include triangle(up, 6px, #222);
-        top: auto;
-        margin-top: 0;
-        bottom: -6px;
-        left: 47%;
-      }
-      &:after {
-        bottom: -28px;
-        left: 47%;
-        margin-left: -20px;
-      }
+    &:before {
+      @include opacity(1);
     }
   }
 }

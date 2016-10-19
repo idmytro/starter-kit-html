@@ -14,7 +14,7 @@ var reload = browserSync.reload;
 gulp.task('serve', ['sass', 'nunjucks', 'image', 'javascript'], function () {
     browserSync.init({server: "./app"});
     gulp.watch("app/src/**/*.+(html|nunjucks)", ['nunjucks']);
-    gulp.watch("app/src/sass/*.scss", ['sass']);
+    gulp.watch("app/src/sass/**/*.scss", ['sass']);
     gulp.watch("app/src/images/**/*", ['image']);
     gulp.watch("app/src/javascript/*.js", ['javascript']);
     gulp.watch("app/*.html").on('change', reload);
@@ -29,7 +29,7 @@ gulp.task('nunjucks', function () {
         .pipe(reload({stream: true}));
 });
 gulp.task('sass', function () {
-    return gulp.src("app/src/sass/*.scss")
+    return gulp.src("app/src/sass/**/*.scss")
         .pipe(sourcemaps.init())
         .pipe(sass({outputStyle: 'compressed', errLogToConsole: true}))
         .pipe(rename({suffix: '.min'}))
