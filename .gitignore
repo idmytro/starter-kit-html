@@ -1,0 +1,7 @@
+.idea/
+node_modules/
+app/css/
+app/js/
+app/img/
+app/*.html
+app/src/data.json

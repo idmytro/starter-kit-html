@@ -1,0 +1,288 @@
+// @include transition(1s all)
+@mixin transition($tr...) {
+  -webkit-transition: $tr;
+  -moz-transition: $tr;
+  -ms-transition: $tr;
+  -o-transition: $tr;
+  transition: $tr;
+}
+
+// @include transform(scale(1,0.5)
+@mixin transform($tr...) {
+  -webkit-transform: $tr;
+  -moz-transform: $tr;
+  -ms-transform: $tr;
+  -o-transform: $tr;
+  transform: $tr;
+}
+
+// @include border-radius(5px)
+@mixin border-radius($br...) {
+  -webkit-border-radius: $br;
+  -moz-border-radius: $br;
+  border-radius: $br;
+}
+
+/*
+ @include keyframes(fade) {
+ 0% { opacity : 1 }
+ 100% { opacity : 0 }
+ }
+*/
+@mixin keyframes($animation-name) {
+  @-webkit-keyframes #{$animation-name} {
+    @content;
+  }
+  @-moz-keyframes #{$animation-name} {
+    @content;
+  }
+  @-ms-keyframes #{$animation-name} {
+    @content;
+  }
+  @-o-keyframes #{$animation-name} {
+    @content;
+  }
+  @keyframes #{$animation-name} {
+    @content;
+  }
+}
+
+// @include animation('fade alternate infinite 5s 3s linear');
+@mixin animation($str) {
+  -webkit-animation: #{$str};
+  -moz-animation: #{$str};
+  -ms-animation: #{$str};
+  -o-animation: #{$str};
+  animation: #{$str};
+}
+
+// @include opacity(.5)
+@mixin opacity($opacity) {
+  opacity: $opacity;
+  $opacity-ie: $opacity * 100;
+  filter: alpha(opacity=$opacity-ie); //IE8
+}
+
+@function calculateRem($size) {
+  $remSize: $size / 16px;
+  @return $remSize * 1rem;
+}
+
+// @include font-size(15px)
+@mixin font-size($size) {
+  font-size: $size;
+  font-size: calculateRem($size);
+}
+
+// @include background-image('background', 'cover')
+$image-path: '../img' !default;
+$fallback-extension: 'png' !default;
+$retina-suffix: '@2x';
+@mixin background-image($name, $size:false) {
+  background-image: url(#{$image-path}/#{$name}.svg);
+  @if ($size) {
+    background-size: $size;
+  }
+  .no-svg & {
+    background-image: url(#{$image-path}/#{$name}.#{$fallback-extension});
+
+    @media only screen and (-moz-min-device-pixel-ratio: 1.5), only screen and (-o-min-device-pixel-ratio: 3/2), only screen and (-webkit-min-device-pixel-ratio: 1.5), only screen and (min-device-pixel-ratio: 1.5) {
+      background-image: url(#{$image-path}/#{$name}#{$retina-suffix}.#{$fallback-extension});
+    }
+  }
+}
+
+/*
+* @include triangle within a pseudo element and add positioning properties (ie. top, left)
+* $direction: up, down, left, right
+*/
+@mixin triangle($direction, $size: 6px, $color: #222) {
+  content: '';
+  display: block;
+  position: absolute;
+  height: 0;
+  width: 0;
+  @if ($direction == 'up') {
+    border-bottom: $size solid $color;
+    border-left: 1/2*$size solid transparent;
+    border-right: 1/2*$size solid transparent;
+  } @else if ($direction == 'down') {
+    border-top: $size solid $color;
+    border-left: 1/2*$size solid transparent;
+    border-right: 1/2*$size solid transparent;
+  } @else if ($direction == 'left') {
+    border-top: 1/2*$size solid transparent;
+    border-bottom: 1/2*$size solid transparent;
+    border-right: $size solid $color;
+  } @else if ($direction == 'right') {
+    border-top: 1/2*$size solid transparent;
+    border-bottom: 1/2*$size solid transparent;
+    border-left: $size solid $color;
+  }
+}
+
+$breakpoints: (
+        'tiny': (max-width: 767px),
+        'small': (min-width: 768px),
+        'medium': (min-width: 992px),
+        'large': (min-width: 1200px)
+);
+
+// Creating the mixin
+@mixin breakpoint($name) {
+  @if map-has-key($breakpoints, $name) {
+    @media #{inspect(map-get($breakpoints, $name))} {
+      @content;
+    }
+  } @else {
+    @warn "Couldn't find a your breakpoint named `#{$name}`.";
+  }
+}
+
+@mixin tooltip($content: attr(data-tooltip), $direction: top) {
+  position: relative;
+  &:before, &:after {
+    display: none;
+    z-index: 98;
+  }
+  &:hover {
+    &:after { // for text bubble
+      content: $content;
+      display: block;
+      position: absolute;
+      height: 12px; // (makes total height including padding 22px)
+      padding: 6px;
+      font-size: 12px;
+      white-space: nowrap;
+      color: #fff;
+      @include text-shadow(1px 1px #000);
+      background-color: #222;
+    }
+    @if ($direction == 'top') {
+      &:before {
+        @include triangle(down, 6px, #222);
+        top: -6px;
+        margin-top: 0;
+        left: 47%;
+      }
+      &:after {
+        top: -28px;
+        left: 47%;
+        margin-left: -20px;
+      }
+    } @else if ($direction == 'bottom') {
+      &:before {
+        @include triangle(up, 6px, #222);
+        top: auto;
+        margin-top: 0;
+        bottom: -6px;
+        left: 47%;
+      }
+      &:after {
+        bottom: -28px;
+        left: 47%;
+        margin-left: -20px;
+      }
+    }
+  }
+}
+
+@mixin margin--auto {
+  margin: {
+    left: auto;
+    right: auto;
+  }
+}
+
+@mixin pseudo($display: block, $pos: absolute, $content: '') {
+  content: $content;
+  display: $display;
+  position: $pos;
+}
+
+@mixin input-placeholder {
+  &.placeholder {
+    @content;
+  }
+  &:-moz-placeholder {
+    @content;
+  }
+  &::-moz-placeholder {
+    @content;
+  }
+  &:-ms-input-placeholder {
+    @content;
+  }
+  &::-webkit-input-placeholder {
+    @content;
+  }
+}
+
+/// Background gradient helper
+/// @access public
+/// @param {Color} $start-color - Start color
+/// @param {Color} $end-color - End color
+/// @param {String} $orientation - Type of gradient, either `vertical`, `horizontal` or `radial`
+/// @example scss - Usage
+///   .foo {
+///     @include background-gradient(red, black, 'vertical');
+///   }
+/// @example css - Result
+///   .foo {
+///     background: -webkit-linear-gradient(top, red, black);
+///     background: linear-gradient(to bottom, red, black);
+///   }
+@mixin background-gradient($start-color, $end-color, $orientation) {
+  background: $start-color;
+
+  @if $orientation == 'vertical' {
+    background: -webkit-linear-gradient(top, $start-color, $end-color);
+    background: linear-gradient(to bottom, $start-color, $end-color);
+  } @else if $orientation == 'horizontal' {
+    background: -webkit-linear-gradient(left, $start-color, $end-color);
+    background: linear-gradient(to right, $start-color, $end-color);
+  } @else {
+    background: -webkit-radial-gradient(center, ellipse cover, $start-color, $end-color);
+    background: radial-gradient(ellipse at center, $start-color, $end-color);
+  }
+}
+
+/// Horizontally and vertically centers block elements
+/// Important: you must have a parent element with `position: relative`.
+/// @access public
+/// @example scss - Usage
+///   .foo {
+///     @include center-both;
+///   }
+/// @example css - Result
+///   .foo {
+///     position: absolute;
+///     top: 50%;
+///     left: 50%;
+///     -webkit-transform: translate(-50%, -50%);
+///     -ms-transform: translate(-50%, -50%);
+///     transform: translate(-50%, -50%);
+///   }
+@mixin center-both {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  @include prefix(transform, translate(-50%, -50%), 'webkit' 'ms');
+}
+
+@mixin outline {
+  box-shadow: rgba(255, 255, 255, 0.5) 0 1px 0, inset rgba(0, 0, 0, 0.75) 0 1px 0;
+}
+
+@mixin navigation-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  > li {
+    display: block;
+    float: left;
+    &:last-child {
+      margin-right: 0px;
+    }
+  }
+}

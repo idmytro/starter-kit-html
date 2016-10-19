@@ -1,0 +1,16 @@
+<h1>Nunjucks</h1>
+<pre>
+        { % <span>extends</span> "base.html" % }
+
+        { % <span>block</span> header % }
+    <h1>{ { title } }</h1>
+    { % <span>endblock</span> % }
+
+    { % <span>block</span> content % }
+    <ul>
+        { % <span>for</span> name, item in items % }
+        <li>{ { name } } : { { item } }</li>
+        { % <span>endfor</span> % }
+    </ul>
+    { % <span>endblock</span> % }
+</pre>
