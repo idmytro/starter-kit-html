@@ -9,11 +9,13 @@
     { % <span>block</span> content % }
     <ul>
         { % <span>for</span> name, item in items % }
+
         <li>{ { name } } : { { item } }</li>
+
         { % <span>endfor</span> % }
     </ul>
     { % <span>endblock</span> % }
 </pre>
 
 <h1>Tooltip</h1>
-<p>Ceci est un <span class="data-tooltip" data-tooltip="Oui je suis un tooltip">tooltip</span></p>
+<p>Ceci est un <span class="_tooltip" data-tooltip="Oui je suis un tooltip">tooltip</span></p>

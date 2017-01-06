@@ -3,7 +3,7 @@
 @import "vendor/bootstrap";
 
 body {
-  span {
+  span._tooltip {
     @include tooltip(attr(data-tooltip), 'top');
   }
 }
